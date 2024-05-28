@@ -214,27 +214,47 @@ export function ItemTable() {
     <div>
       <InputFile handleFileUpload={handleFileUpload}></InputFile>
 
-      <div className="">
-        <Input
-          type="text"
-          placeholder="Buscar..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
-        <select name="column" onChange={handleFilterChange}>
-          <option value="">Selecione uma coluna</option>
-          <option value="nome">Nome</option>
-          <option value="data_nascimento">Data de Nascimento</option>
-          <option value="genero">Gênero</option>
-          <option value="nacionalidade">Nacionalidade</option>
-        </select>
-        <Input
-          type="text"
-          name="value"
-          placeholder="Valor do filtro"
-          onChange={handleFilterChange}
-        />
-        <Button onClick={exportToCSV}>Exportar para CSV</Button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "1rem",
+          gap: "1rem",
+          backgroundColor: "ButtonFace",
+        }}
+      >
+        <div>
+          <Input
+            type="text"
+            placeholder="Buscar..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            style={{ width: "40vw" }}
+          />
+        </div>
+
+        <div style={{ display: "flex", gap: "1rem" }}>
+          <select
+            name="column"
+            onChange={handleFilterChange}
+            className=" bg-background px-3 py-2 text-sm"
+          >
+            <option value="">Selecione uma coluna</option>
+            <option value="nome">Nome</option>
+            <option value="data_nascimento">Data de Nascimento</option>
+            <option value="genero">Gênero</option>
+            <option value="nacionalidade">Nacionalidade</option>
+          </select>
+
+          <Input
+            type="text"
+            name="value"
+            placeholder="Valor do filtro"
+            onChange={handleFilterChange}
+            style={{ width: "20%" }}
+          />
+          <Button onClick={exportToCSV}>Exportar para CSV</Button>
+        </div>
       </div>
 
       <Table>
