@@ -10,6 +10,7 @@ export function InputText(props: any) {
         id={props.field}
         placeholder={props.label}
         value={props.value}
+        onChange={props.onChange}
       />
     </div>
   );
