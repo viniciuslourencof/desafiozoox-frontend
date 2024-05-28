@@ -12,10 +12,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-
+import { Input } from "@/components/ui/input";
 import { InputFile } from "@/components/component/input-file";
 import { DeleteDialog } from "@/components/component/delete-dialog";
 import { SaveDialog } from "@/components/component/save-dialog";
+import { HistoryDialog } from "../component/history-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function ItemTable() {
   //CRUD
@@ -172,12 +180,42 @@ export function ItemTable() {
 
   // FILTROS
 
+  // EXPORTACAO
+
+  const exportToCSV = () => {
+    const filteredItems = filterAndSearchItems();
+
+    const header = Object.keys(filteredItems[0]).join(",");
+    const csv = [
+      header,
+      ...filteredItems.map((item) =>
+        Object.values(item)
+          .map((value) =>
+            typeof value === "string" && value.includes(",")
+              ? `"${value}"`
+              : value
+          )
+          .join(",")
+      ),
+    ].join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "table_data.csv";
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  // EXPORTACAO
+
   return (
     <div>
       <InputFile handleFileUpload={handleFileUpload}></InputFile>
 
-      <div>
-        <input
+      <div className="">
+        <Input
           type="text"
           placeholder="Buscar..."
           value={searchQuery}
@@ -190,12 +228,13 @@ export function ItemTable() {
           <option value="genero">Gênero</option>
           <option value="nacionalidade">Nacionalidade</option>
         </select>
-        <input
+        <Input
           type="text"
           name="value"
           placeholder="Valor do filtro"
           onChange={handleFilterChange}
         />
+        <Button onClick={exportToCSV}>Exportar para CSV</Button>
       </div>
 
       <Table>
@@ -234,13 +273,18 @@ export function ItemTable() {
                     button={<Button>Editar</Button>}
                     save={handleEdit}
                     title="Atualização de Cadastro"
-                    description="Preencha os dados atualizados do cadastro selecioando"
+                    description="Preencha os dados atualizados do cadastro selecionado"
                     data={user}
                   />
 
                   <DeleteDialog
                     button={<Button>Excluir</Button>}
                     delete={() => handleDelete(user.id)}
+                  />
+
+                  <HistoryDialog
+                    button={<Button>Histórico</Button>}
+                    itemId={user.id}
                   />
                 </div>
               </TableCell>
