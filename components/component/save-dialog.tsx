@@ -14,20 +14,19 @@ import { useState, useEffect } from "react";
 import { formatDate } from "@/utils/formatDate";
 
 export function SaveDialog(props: any) {
-
   const [nome, setNome] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [genero, setGenero] = useState("");
   const [nacionalidade, setNacionalidade] = useState("");
 
-  useEffect(() => {    
+  useEffect(() => {
     if (props.data) {
       setNome(props.data.nome || "");
       setDataNascimento(formatDate(props.data.data_nascimento) || "");
       setGenero(props.data.genero || "");
       setNacionalidade(props.data.nacionalidade || "");
     }
-  }, [props.data]); 
+  }, [props.data]);
 
   const handleSave = () => {
     props.save({
@@ -78,11 +77,12 @@ export function SaveDialog(props: any) {
           ></InputText>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleSave}>Confirmar</AlertDialogAction>
+            <AlertDialogAction onClick={handleSave}>
+              Confirmar
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </>
-
   );
 }

@@ -43,17 +43,17 @@ export function HistoryDialog(props: any) {
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
   };
-  
+
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
 
   return (
@@ -71,14 +71,16 @@ export function HistoryDialog(props: any) {
             <TableHeader>
               <TableRow>
                 <TableHead>Data de Alteração</TableHead>
-                <TableHead>Dados Modificados</TableHead>                
+                <TableHead>Dados Modificados</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {history.map((item: any, index) => (
                 <TableRow key={index}>
                   <TableCell>{formatTimestamp(item.timestamp)}</TableCell>
-                  <TableCell>{JSON.stringify(item.changed_fields)}</TableCell>                  
+                  <TableCell>
+                    <pre>{JSON.stringify(item.changed_fields, null, 2)}</pre>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
