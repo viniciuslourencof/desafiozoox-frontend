@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { useItems } from "@/hooks/useItems";
 import {
@@ -22,7 +22,8 @@ import { exportToCSV } from "@/utils/exportToCSV";
 import { formatDate } from "@/utils/formatDate";
 
 export function ItemTable() {
-  const { items, handleFileUpload, handleAdd, handleEdit, handleDelete } = useItems();
+  const { items, handleFileUpload, handleAdd, handleEdit, handleDelete } =
+    useItems();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCriteria, setFilterCriteria] = useState({
@@ -34,7 +35,11 @@ export function ItemTable() {
   const handleFilterChange = (e: any) =>
     setFilterCriteria({ ...filterCriteria, [e.target.name]: e.target.value });
 
-  const filteredItems = filterAndSearchItems(items, searchQuery, filterCriteria);
+  const filteredItems = filterAndSearchItems(
+    items,
+    searchQuery,
+    filterCriteria
+  );
 
   return (
     <div>
@@ -62,7 +67,7 @@ export function ItemTable() {
             name="value"
             placeholder="Valor do filtro"
             onChange={handleFilterChange}
-            className="w-1/4"
+            className="w-1/3"
           />
         </div>
         <div className="w-fit flex gap-2">
@@ -107,7 +112,7 @@ export function ItemTable() {
                     save={handleEdit}
                     title="Atualização de Cadastro"
                     description="Preencha os dados atualizados do cadastro selecionado."
-                    data={user}                    
+                    data={user}
                   />
                   <DeleteDialog
                     button={<Button>Excluir</Button>}

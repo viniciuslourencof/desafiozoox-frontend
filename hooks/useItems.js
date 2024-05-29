@@ -55,6 +55,19 @@ export const useItems = () => {
     
 
     const handleAdd = async (newItem) => {
+
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth()+1;
+        var dt = date.getDate();
+
+        if (dt < 10) {
+        dt = '0' + dt;
+        }
+        if (month < 10) {
+        month = '0' + month;
+        }
+
         const newData = {
             nome: newItem.nome,
             data_nascimento: newItem.data_nascimento
@@ -62,6 +75,7 @@ export const useItems = () => {
                 : null,
             genero: newItem.genero,
             nacionalidade: newItem.nacionalidade,
+            data_criacao: year + '-' + month + '-' + dt
         };
 
         try {
@@ -78,6 +92,18 @@ export const useItems = () => {
 
     const handleEdit = async (updatedItem) => {        
 
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth()+1;
+        var dt = date.getDate();
+
+        if (dt < 10) {
+        dt = '0' + dt;
+        }
+        if (month < 10) {
+        month = '0' + month;
+        }
+
         const updatedData = {
             nome: updatedItem.nome,
             data_nascimento: updatedItem.data_nascimento
@@ -85,6 +111,7 @@ export const useItems = () => {
                 : null,
             genero: updatedItem.genero,
             nacionalidade: updatedItem.nacionalidade,
+            data_atualizacao: year + '-' + month + '-' + dt
         };        
 
         try {
