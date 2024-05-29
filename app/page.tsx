@@ -1,4 +1,4 @@
-import { ItemTable } from "@/components/item-table";
+import { ItemTable } from "@/components/component/item-table";
 
 export default function Home() {
   return (

@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
+import { Loader } from "react-feather";
 
 export function InputFile(props: any) {
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]; // Obtém o primeiro arquivo selecionado
+  const [loading, setLoading] = useState(false);
 
-    // Verifica se há um arquivo selecionado antes de chamar a função de manipulação de upload
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
     if (file) {
-      props.handleFileUpload(file);
+      setLoading(true);
+      props
+        .handleFileUpload(file)
+        .then(() => setLoading(false))
+        .catch(() => setLoading(false));
     }
   };
 
   const handleInputClick = () => {
-    // Simular o clique no elemento de entrada de arquivo
+    if (loading) return;
+
     const inputElement = document.getElementById("fileInput");
     if (inputElement) {
       inputElement.click();
@@ -23,26 +30,50 @@ export function InputFile(props: any) {
   };
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0]; // Obtém o primeiro arquivo arrastado e solto
+    if (loading) return;
 
-    // Verifica se há um arquivo antes de chamar a função de manipulação de upload
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+
     if (file) {
-      props.handleFileUpload(file);
+      setLoading(true);
+      props
+        .handleFileUpload(file)
+        .then(() => setLoading(false))
+        .catch(() => setLoading(false));
     }
   };
 
   return (
-    <div className="w-full max-w-screen-xl mx-auto space-y-4 p-4 md:p-6"> {/* Alterado para ocupar quase toda a largura da tela */}
+    <div
+      className={`w-full max-w-screen-xl mx-auto space-y-4 p-4 md:p-6 ${
+        loading ? "pointer-events-none" : ""
+      }`}
+    >
       <div className="space-y-2">
         <h2 className="text-2xl font-bold">Carregar arquivo CSV</h2>
       </div>
       <div
-        className="group relative flex h-32 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:border-gray-400 dark:border-gray-700 dark:bg-gray-900"
+        className={`group relative flex h-32 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 transition-colors hover:border-gray-400 dark:border-gray-700 dark:bg-gray-900 ${
+          loading ? "cursor-not-allowed" : ""
+        }`}
         onClick={handleInputClick}
-        onDragOver={handleDragOver} // Adiciona manipulador de evento para 'dragover'
-        onDrop={handleDrop} // Adiciona manipulador de evento para 'drop'
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
       >
+        {loading ? (
+          <div className="flex items-center justify-center">
+            <Loader className="animate-spin h-8 w-8 text-gray-900" />
+          </div>
+        ) : (
+          <div className="z-20 flex flex-col items-center space-y-2 text-center text-gray-500 transition-colors group-hover:text-gray-600 dark:text-gray-400 dark:group-hover:text-gray-300">
+            <UploadIcon className="h-8 w-8" />
+            <p>
+              Arraste e solte um arquivo CSV ou clique para selecionar um
+              arquivo.
+            </p>
+          </div>
+        )}
         <input
           accept=".csv"
           id="fileInput"
@@ -50,12 +81,6 @@ export function InputFile(props: any) {
           type="file"
           onChange={handleInputChange}
         />
-        <div className="z-20 flex flex-col items-center space-y-2 text-center text-gray-500 transition-colors group-hover:text-gray-600 dark:text-gray-400 dark:group-hover:text-gray-300">
-          <UploadIcon className="h-8 w-8" />
-          <p>
-            Arraste e solte um arquivo CSV ou clique para selecionar um arquivo.
-          </p>
-        </div>
       </div>
     </div>
   );
