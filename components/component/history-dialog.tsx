@@ -21,6 +21,7 @@ import {
 
 export function HistoryDialog(props: any) {
   const [history, setHistory] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -34,42 +35,58 @@ export function HistoryDialog(props: any) {
       }
     };
 
-    fetchHistory();
-  }, [props.itemId]);
+    if (isOpen) {
+      fetchHistory();
+    }
+  }, [isOpen, props.itemId]);
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+  };
+  
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  };
 
   return (
     <div>
-      <AlertDialog>
+      <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
         <AlertDialogTrigger asChild>{props.button}</AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Histórico de Alterações</AlertDialogTitle>
             <AlertDialogDescription>
-              Dados das alterações realizadas neste registro
+              Detalhes das alterações realizadas neste registro.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>
-                  <TableCell>Data de Alteração</TableCell>
-                  <TableCell>Dados Antigos</TableCell>
-                  <TableCell>Dados Novos</TableCell>
-                </TableHead>
+                <TableHead>Data de Alteração</TableHead>
+                <TableHead>Dados Modificados</TableHead>                
               </TableRow>
             </TableHeader>
             <TableBody>
               {history.map((item: any, index) => (
                 <TableRow key={index}>
-                  <TableCell>{item.timestamp}</TableCell>
-                  <TableCell>{JSON.stringify(item.old_data)}</TableCell>
-                  <TableCell>{JSON.stringify(item.new_data)}</TableCell>
+                  <TableCell>{formatTimestamp(item.timestamp)}</TableCell>
+                  <TableCell>{JSON.stringify(item.changed_fields)}</TableCell>                  
                 </TableRow>
               ))}
             </TableBody>
           </Table>
           <AlertDialogFooter>
-            <AlertDialogAction>Fechar</AlertDialogAction>
+            <AlertDialogAction onClick={() => setIsOpen(false)}>
+              Fechar
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
